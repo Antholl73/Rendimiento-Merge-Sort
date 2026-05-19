@@ -17,37 +17,41 @@ int main(int argc, char *argv[]) {
   Comparator *comp = nullptr;
   comp = &asc;
 
+  SAscending ascen;
+
   // Crear el archivo.csv
   ofstream archivo_csv("tiempos_merge.csv");
-  archivo_csv << "Elementos, Normal, Polimorfismo, Puntero_funcion\n";
+  archivo_csv
+      << "Elementos, Normal, Polimorfismo, Puntero_funcion, Templates\n";
 
   // =======================================================================
-  // IMPRESIÓN DE LA CABECERA DE LA TABLA (Se hace una sola vez fuera del
-  // bucle)
+  // IMPRESIÓN DE LA CABECERA DE LA TABLA
   // =======================================================================
   cout << endl;
-  cout << setfill('=') << setw(72) << "" << endl; // Línea decorativa superior
-  cout << setfill(' '); // Reestablece el relleno a espacios en blanco
+  cout << setfill('=') << setw(91) << "" << endl;
+  cout << setfill(' ');
 
-  // Definimos los nombres de las columnas con un ancho fijo de caracteres
   cout << left << setw(15) << "ELEMENTOS" << left << setw(18)
        << "M. NORMAL (ms)" << left << setw(22) << "POLIMORFISMO (ms)" << left
-       << setw(15) << "PUNT. FUNC (ms)" << endl;
+       << setw(18) << "PUNT. FUNC (ms)" << left << setw(18) << "TEMPLATES (ms)"
+       << endl;
 
-  cout << setfill('-') << setw(72) << "" << endl; // Línea divisoria
-  cout << setfill(' ');                           // Reestablece el relleno
+  cout << setfill('-') << setw(91) << "" << endl;
+  cout << setfill(' ');
   // =======================================================================
 
-  while (arr_size <= 2000001) {
+  while (arr_size <= 1000001) {
     int *data1 = new int[arr_size];
     int *data2 = new int[arr_size];
     int *data3 = new int[arr_size];
+    int *data4 = new int[arr_size];
 
     rand_arr(arr_size, data1);
 
     for (ulong i = 0; i < arr_size; i++) {
       *(data2 + i) = *(data1 + i);
       *(data3 + i) = *(data1 + i);
+      *(data4 + i) = *(data1 + i);
     }
 
     // METODO NORMAL
@@ -77,32 +81,42 @@ int main(int argc, char *argv[]) {
 
     chrono::duration<double, milli> tiempo3 = fin3 - inicio3;
 
+    // METODO TEMPLATES
+    auto inicio4 = chrono::high_resolution_clock::now();
+
+    mergeSort_temp(data4, 0, arr_size - 1, ascen);
+
+    auto fin4 = chrono::high_resolution_clock::now();
+
+    chrono::duration<double, milli> tiempo4 = fin4 - inicio4;
+
     // =======================================================================
-    // IMPRESIÓN FORMATEADA DE FILAS (Mismo ancho 'setw' que la cabecera)
+    // IMPRESIÓN FORMATEADA DE FILAS
     // =======================================================================
     cout << left << setw(15) << arr_size << left << setw(18) << tiempo1.count()
-         << left << setw(22) << tiempo2.count() << left << setw(15)
-         << tiempo3.count() << endl;
+         << left << setw(22) << tiempo2.count() << left << setw(18)
+         << tiempo3.count() << left << setw(18) << tiempo4.count() << endl;
     // =======================================================================
 
     // Guardamos los datos puros en el archivo CSV
     archivo_csv << arr_size << "," << tiempo1.count() << "," << tiempo2.count()
-                << "," << tiempo3.count() << "\n";
+                << "," << tiempo3.count() << "," << tiempo4.count() << "\n";
 
     delete[] data1;
     delete[] data2;
     delete[] data3;
+    delete[] data4;
 
     arr_size += 10000;
   }
 
   // Línea decorativa inferior al finalizar todo el bucle
-  cout << setfill('=') << setw(72) << "" << endl;
+  cout << setfill('=') << setw(91) << "" << endl;
   cout << endl;
 
   // Cerrar archivo
   archivo_csv.close();
-  cout << "Datos exportador :) \n";
+  cout << "Datos exportados :) \n";
 
   return 0;
 }

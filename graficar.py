@@ -16,6 +16,7 @@ try:
     plt.plot(df['Elementos'], df['Normal'], label='Método Normal', linewidth=1)
     plt.plot(df['Elementos'], df['Polimorfismo'], label='Polimorfismo', linewidth=1)
     plt.plot(df['Elementos'], df['Puntero_funcion'], label='Puntero a Función', linewidth=1)
+    plt.plot(df['Elementos'], df['Templates'], label='Templates', linewidth=1)
 
     # 4. Añadir títulos y etiquetas a los ejes
     plt.title('Comparativa de Rendimiento: Variaciones de Merge Sort', fontsize=14, fontweight='bold')
