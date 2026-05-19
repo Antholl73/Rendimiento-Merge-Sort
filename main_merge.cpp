@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
   cout << setfill(' ');
   // =======================================================================
 
-  while (arr_size <= 1000001) {
+  while (arr_size <= 2000001) {
     int *data1 = new int[arr_size];
     int *data2 = new int[arr_size];
     int *data3 = new int[arr_size];
