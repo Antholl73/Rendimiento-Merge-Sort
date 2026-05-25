@@ -18,11 +18,12 @@ int main(int argc, char *argv[]) {
   comp = &asc;
 
   SAscending ascen;
+  TAscending ascen2;
 
   // Crear el archivo.csv
   ofstream archivo_csv("tiempos_merge.csv");
-  archivo_csv
-      << "Elementos, Normal, Polimorfismo, Puntero_funcion, Templates\n";
+  archivo_csv << "Elementos, Normal, Polimorfismo, Puntero_funcion, Templates, "
+                 "Templates_Inline\n";
 
   // =======================================================================
   // IMPRESIÓN DE LA CABECERA DE LA TABLA
@@ -34,7 +35,7 @@ int main(int argc, char *argv[]) {
   cout << left << setw(15) << "ELEMENTOS" << left << setw(18)
        << "M. NORMAL (ms)" << left << setw(22) << "POLIMORFISMO (ms)" << left
        << setw(18) << "PUNT. FUNC (ms)" << left << setw(18) << "TEMPLATES (ms)"
-       << endl;
+       << left << setw(18) << "INLINE (ms)" << endl;
 
   cout << setfill('-') << setw(91) << "" << endl;
   cout << setfill(' ');
@@ -45,6 +46,7 @@ int main(int argc, char *argv[]) {
     int *data2 = new int[arr_size];
     int *data3 = new int[arr_size];
     int *data4 = new int[arr_size];
+    int *data5 = new int[arr_size];
 
     rand_arr(arr_size, data1);
 
@@ -52,6 +54,7 @@ int main(int argc, char *argv[]) {
       *(data2 + i) = *(data1 + i);
       *(data3 + i) = *(data1 + i);
       *(data4 + i) = *(data1 + i);
+      *(data5 + i) = *(data1 + i);
     }
 
     // METODO NORMAL
@@ -90,24 +93,36 @@ int main(int argc, char *argv[]) {
 
     chrono::duration<double, milli> tiempo4 = fin4 - inicio4;
 
+    // METODO TEMPLATES 2
+    auto inicio5 = chrono::high_resolution_clock::now();
+
+    mergeSort_temp_2(data5, 0, arr_size - 1, ascen2);
+
+    auto fin5 = chrono::high_resolution_clock::now();
+
+    chrono::duration<double, milli> tiempo5 = fin5 - inicio5;
+
     // =======================================================================
     // IMPRESIÓN FORMATEADA DE FILAS
     // =======================================================================
     cout << left << setw(15) << arr_size << left << setw(18) << tiempo1.count()
          << left << setw(22) << tiempo2.count() << left << setw(18)
-         << tiempo3.count() << left << setw(18) << tiempo4.count() << endl;
+         << tiempo3.count() << left << setw(18) << tiempo4.count() << left
+         << setw(18) << tiempo5.count() << endl;
     // =======================================================================
 
     // Guardamos los datos puros en el archivo CSV
     archivo_csv << arr_size << "," << tiempo1.count() << "," << tiempo2.count()
-                << "," << tiempo3.count() << "," << tiempo4.count() << "\n";
+                << "," << tiempo3.count() << "," << tiempo4.count() << ","
+                << tiempo5.count() << "\n";
 
     delete[] data1;
     delete[] data2;
     delete[] data3;
     delete[] data4;
+    delete[] data5;
 
-    arr_size += 10000;
+    arr_size += 50000;
   }
 
   // Línea decorativa inferior al finalizar todo el bucle
